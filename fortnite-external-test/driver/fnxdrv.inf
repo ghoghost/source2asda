@@ -1,0 +1,56 @@
+;
+; fnxdrv.inf - KMDF software diagnostic driver (test/install template)
+; No anti-cheat evasion/undetectability is claimed.
+;
+
+[Version]
+Signature   = "$WINDOWS NT$"
+Class       = System
+ClassGuid   = {4d36e97d-e325-11ce-bfc1-08002be10318}
+Provider    = %ManufacturerName%
+CatalogFile = fnxdrv.cat
+DriverVer   = 01/01/2026,1.0.0.0
+PnpLockdown = 1
+
+[DestinationDirs]
+DefaultDestDir = 13
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+fnxdrv.sys = 1,,
+
+[Manufacturer]
+%ManufacturerName% = Standard,NTamd64
+
+[Standard.NTamd64]
+%DeviceDesc% = FnxDrv_Install, Root\FnxTestDrv
+
+[FnxDrv_Install.NT]
+CopyFiles = Drivers_Dir
+
+[Drivers_Dir]
+fnxdrv.sys
+
+[FnxDrv_Install.NT.Services]
+AddService = FnxTestDrv, 0x00000002, FnxDrv_Service_Inst
+
+[FnxDrv_Service_Inst]
+DisplayName    = %ServiceDesc%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %13%\fnxdrv.sys
+
+[FnxDrv_Install.NT.Wdf]
+KmdfService = FnxTestDrv, FnxDrv_wdfsect
+
+[FnxDrv_wdfsect]
+KmdfLibraryVersion = 1.15
+
+[Strings]
+ManufacturerName = "FnxTest"
+DiskName         = "FnxTest Driver Installation Disk"
+DeviceDesc       = "FnxTest Diagnostic Driver"
+ServiceDesc      = "FnxTest Diagnostic Driver Service"
